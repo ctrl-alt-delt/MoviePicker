@@ -1,0 +1,42 @@
+body {
+    background: #FAFAFF;
+}
+
+.card {
+    background: #273469;
+}
+
+.card-footer {
+    border: none;
+    background: none;
+}
+
+.btn-success {
+    background: #1E2749;
+    border-color: #1E2749;
+    color: #EEEEEE;
+}
+
+.btn-warning {
+    background: #E4D9FF;
+    border-color: #E4D9FF;
+    color: #1E2749;
+}
+
+h4 {
+    color: #1E2749;
+}
+
+h3, h6 {
+    color: #FAFAFF;
+}
+
+#firstMovieDescription {
+    color: #FAFAFF;
+    height: 150px;
+}
+
+#secondMovieDescription {
+    color: #FAFAFF;
+    height: 150px;
+}

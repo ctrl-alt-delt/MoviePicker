@@ -1,0 +1,264 @@
+<html>
+
+<head>
+    <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+    <meta content="utf-8" http-equiv="encoding">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
+    <link href="index.css" rel="stylesheet">
+</head>
+
+<body>
+    <div class="container mt-3" id="mainContainer">
+        <h4 id="roundHeader" class="text-center"></h4>
+        <div class="row">
+            <div class="col-6">
+            <div class="card">
+                <div class="card-body">
+                    <h3 class="card-title mb-2" id="firstMovieTitle"></h3>
+                    <div class="row justify-content-start">
+                        <div class="col-3">
+                            <h6 id="firstMovieYear"></h6>
+                        </div>
+                        <div class="col-3">
+                            <h6 id="firstMovieRuntime"></h6>
+                        </div>
+                        <div class="col-6" id="firstMovieGenres"></div>
+                    </div>
+                    <img src="" id="firstMoviePoster" class="img-fluid mt-2 mb-3">
+                    <div class="mb-3 overflow-auto" id="firstMovieDescription"></div>
+                    <button type="button" class="btn btn-success" onClick="firstMovieSelected()"><i
+                            class="fas fa-thumbs-up"></i> This One!</button>
+                    <button type="button" class="btn btn-warning" onClick="firstMovieWatchNow()"><i
+                            class="fas fa-ticket-alt"></i> Watch Now!</button>
+                </div>
+            </div>
+        </div>
+        <div class="col-6">
+            <div class="card">
+                <div class="card-body">
+                    <h3 class="card-title mb-2" id="secondMovieTitle"></h3>
+                    <div class="row justify-content-start">
+                        <div class="col-3">
+                            <h6 id="secondMovieYear"></h6>
+                        </div>
+                        <div class="col-3">
+                            <h6 id="secondMovieRuntime"></h6>
+                        </div>
+                        <div class="col-6" id="secondMovieGenres"></div>
+                    </div>
+                    <img src="" id="secondMoviePoster" class="img-fluid mt-2 mb-3">
+                    <div class="mb-3 overflow-auto" id="secondMovieDescription"></div>
+                <button type="button" class="btn btn-success" onClick="secondMovieSelected()"><i
+                        class="fas fa-thumbs-up"></i> This One!</button>
+                <button type="button" class="btn btn-warning" onClick="secondMovieWatchNow()"><i
+                        class="fas fa-ticket-alt"></i> Watch Now!</button>
+                </div>
+            </div>
+            </div>
+        </div>
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"
+        integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0"
+        crossorigin="anonymous"></script>
+    <script src="https://kit.fontawesome.com/dc928f95a0.js" crossorigin="anonymous"></script>
+    <script>
+        const numRounds = 10
+        var currRound = 1;
+        var firstMovieId = ""
+        var secondMovieId = ""
+        var selectedMovieId = ""
+
+        // A $( document ).ready() block.
+        $(document).ready(function () {
+            initialize()
+        });
+
+        async function initialize() {
+            $("#roundHeader").text("Round " + currRound + " of " + 10)
+
+            // ***************
+            // * FIRST MOVIE *
+            // ***************
+            var firstMovieIndex = Math.floor(Math.random() * 19)
+            var firstMoviePage = Math.floor(Math.random() * 500)
+            let response = await fetch('https://api.themoviedb.org/3/movie/popular?api_key=b8f237ffd93d0c7e67dd2f5c54319894&page=' + firstMoviePage);
+            let data = await response.json();
+            firstMovieId = data.results[firstMovieIndex].id
+            let genreString = ""
+
+            response = await fetch('https://api.themoviedb.org/3/movie/' + firstMovieId + '?api_key=b8f237ffd93d0c7e67dd2f5c54319894');
+            let firstMovieData = await response.json();
+
+            $("#firstMovieTitle").text(firstMovieData.title)
+            $("#firstMovieYear").text(firstMovieData.release_date.split("-")[0])
+            $("#firstMovieRuntime").text(firstMovieData.runtime)
+            // for (i = 0; i < 2; i++) {
+            //     if (firstMovieData.genres[i].name != null) {
+            //         $("#firstMovieGenres").append("<span class='badge mr-2 bg-dark'>" + firstMovieData.genres[i].name + "</span>");
+            //     }
+            // }
+            $("#firstMoviePoster").attr('src', "http://image.tmdb.org/t/p/w500" + firstMovieData.poster_path)
+            $("#firstMovieDescription").text(firstMovieData.overview)
+
+            // ****************
+            // * SECOND MOVIE *
+            // ****************
+            var secondMovieIndex = Math.floor(Math.random() * 19)
+            var secondMoviePage = Math.floor(Math.random() * 500)
+            response = await fetch('https://api.themoviedb.org/3/movie/popular?api_key=b8f237ffd93d0c7e67dd2f5c54319894&page=' + secondMoviePage);
+            data = await response.json();
+            secondMovieId = data.results[secondMovieIndex].id
+            genreString = ""
+
+            response = await fetch('https://api.themoviedb.org/3/movie/' + secondMovieId + '?api_key=b8f237ffd93d0c7e67dd2f5c54319894');
+            let secondMovieData = await response.json();
+
+            $("#secondMovieTitle").text(secondMovieData.original_title)
+            $("#secondMovieYear").text(secondMovieData.release_date.split("-")[0])
+            $("#secondMovieRuntime").text(secondMovieData.runtime)
+            // for (i = 0; i < 2; i++) {
+            //     if (secondMovieData.genres[i].name != null) {
+            //         $("#secondMovieGenres").append("<span class='badge mr-2 bg-dark'>" + secondMovieData.genres[i].name + "</span>");
+            //     }
+            // }
+            $("#secondMoviePoster").attr('src', "http://image.tmdb.org/t/p/w500" + secondMovieData.poster_path)
+            $("#secondMovieDescription").text(secondMovieData.overview)
+        }
+
+        async function movieSelected(movieId, whichMovie) {
+            let movieString = ""
+            switch (whichMovie) {
+                case 0:
+                    movieString = "second"
+                    break;
+                case 1:
+                    movieString = "first"
+                    break;
+                default:
+                    console.log("movieSelected(): invalid case.")
+                    break;
+            }
+
+            $("#" + movieString + "MovieGenres").empty()
+
+            if (currRound == numRounds) {
+                $('#mainContainer').empty()
+                let cardContainer;
+
+                response = await fetch('https://api.themoviedb.org/3/movie/' + movieId + '?api_key=b8f237ffd93d0c7e67dd2f5c54319894');
+                let winningMovieData = await response.json();
+
+                if (cardContainer) {
+                    document.getElementById('mainContainer').replaceWith(cardContainer);
+                    return;
+                }
+
+                cardContainer = document.getElementById('mainContainer');
+
+                let card = document.createElement('div');
+                card.className = 'card shadow cursor-pointer';
+
+                let cardBody = document.createElement('div');
+                cardBody.innerText = winningMovieData.overview;
+                cardBody.className = 'card-body';
+
+                let winningMoviePoster = document.createElement('img');
+                winningMoviePoster.src = "http://image.tmdb.org/t/p/w500" + winningMovieData.poster_path;
+                winningMoviePoster.className = "img-fluid"
+
+                let title = document.createElement('h2');
+                title.innerText = winningMovieData.title;
+                title.className = 'card-title';
+
+                card.appendChild(title);
+                cardBody.appendChild(winningMoviePoster)
+                card.appendChild(cardBody);
+                cardContainer.appendChild(card)
+            } else {
+                currRound++
+                $("#roundHeader").text("Round " + currRound + " of " + 10)
+
+                var newMovieIndex = Math.floor(Math.random() * 19)
+                var newMoviePage = Math.floor(Math.random() * 500)
+                response = await fetch('https://api.themoviedb.org/3/movie/popular?api_key=b8f237ffd93d0c7e67dd2f5c54319894&page=' + newMoviePage);
+                data = await response.json();
+                var newMovieId = data.results[newMovieIndex].id
+
+                let genreString = ""
+
+                response = await fetch('https://api.themoviedb.org/3/movie/' + newMovieId + '?api_key=b8f237ffd93d0c7e67dd2f5c54319894');
+                let newMovieData = await response.json();
+
+                secondMovieId = newMovieId
+
+                $("#" + movieString + "MovieTitle").text(newMovieData.title)
+                $("#" + movieString + "MovieYear").text(newMovieData.release_date.split("-")[0])
+                $("#" + movieString + "MovieRuntime").text(newMovieData.runtime)
+                // for (i = 0; i < 2; i++) {
+                //     if (newMovieData.genres[i].name != null) {
+                //         $("#" + movieString + "MovieGenres").append("<span class='badge mr-2 bg-dark'>" + newMovieData.genres[i].name + "</span>");
+                //     }
+                // }
+                $("#" + movieString + "MoviePoster").attr('src', "http://image.tmdb.org/t/p/w500" + newMovieData.poster_path)
+                $("#" + movieString + "MovieDescription").text(newMovieData.overview)
+            }
+        }
+
+        async function firstMovieSelected(whichMovie) {
+            movieSelected(firstMovieId, 0);
+        }
+
+        async function secondMovieSelected() {
+            movieSelected(firstMovieId, 1);
+        }
+
+        async function watchNow(movieId) {
+            $('#mainContainer').empty();
+            let cardContainer;
+
+            response = await fetch('https://api.themoviedb.org/3/movie/' + selectedMovieId + '?api_key=b8f237ffd93d0c7e67dd2f5c54319894');
+            let winningMovieData = await response.json();
+
+            if (cardContainer) {
+                document.getElementById('mainContainer').replaceWith(cardContainer);
+                return;
+            }
+
+            cardContainer = document.getElementById('mainContainer');
+
+            let card = document.createElement('div');
+            card.className = 'card shadow cursor-pointer';
+
+            let cardBody = document.createElement('div');
+            cardBody.innerText = winningMovieData.overview;
+            cardBody.className = 'card-body';
+
+            let winningMoviePoster = document.createElement('img');
+            winningMoviePoster.src = "http://image.tmdb.org/t/p/w500" + winningMovieData.poster_path;
+            winningMoviePoster.className = "img-fluid"
+
+            let title = document.createElement('h2');
+            title.innerText = winningMovieData.title;
+            title.className = 'card-title';
+
+            card.appendChild(title);
+            cardBody.appendChild(winningMoviePoster)
+            card.appendChild(cardBody);
+            cardContainer.appendChild(card)
+        }
+
+        async function firstMovieWatchNow() {
+            watchNow(firstMovieId);
+        }
+
+        async function secondMovieWatchNow() {
+            watchNow(secondMovieId);
+        }
+    </script>
+</body>
+
+</html>
